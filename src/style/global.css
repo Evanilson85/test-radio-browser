@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Adicione no seu arquivo CSS */
+::-webkit-scrollbar {
+  width: 1px; /* Largura da barra de rolagem */
+}
+
+::-webkit-scrollbar-track {
+  background: #000000; /* Cor de fundo da área da barra */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #a78bfa; /* Cor da barra de rolagem */
+  border-radius: 10px; /* Curvatura da barra */
+  border: 2px solid #1267fc; /* Borda ao redor da barra */
+}
+
+/* Suporte para Firefox */
