@@ -31,18 +31,22 @@ export const Screen = ({ ...props }: IPROPSMENU) => {
           <h3 className="text-white">FAVORITE RADIOS</h3>
           <button className="hidden md:flex items-center gap-5">
             <Header.icon iconName="Search" size={34} />
-            <input type="text" placeholder='Search stations' className='text-white bg-transparent border-none outline-none' />
+            <input
+              type="text"
+              placeholder="Search stations"
+              className="text-white bg-transparent border-none outline-none"
+            />
           </button>
         </div>
       </div>
       <div className="bg-[#4D4D56] min-h-dvh rounded-[10px] relative mt-5">
-        <Blur >
-          <div className='border-b-[1px] border-b-[#605C5C]'>
+        <Blur>
+          <div className="border-b-[1px] border-b-[#605C5C]">
             <div className="flex gap-5 items-center h-[75px] px-10 relative">
-              <div className='bg-black rounded-md'>
-              <Square />
+              <div className="bg-black rounded-md">
+                <Square />
               </div>
-              <h2 className='text-[24px] font-semibold'>NOME DA RÁDIO ATUAL</h2>
+              <h2 className="text-[24px] font-semibold">NOME DA RÁDIO ATUAL</h2>
             </div>
           </div>
           <div className=" flex flex-col gap-5 md:p-5">
