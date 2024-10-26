@@ -7,28 +7,37 @@ interface IPROPSLISTFAVORITE {
   title: string;
   url: string;
   id: string;
-  country: string
-  countrycode: string
+  country: string;
+  countrycode: string;
 }
 
-export const ListFavorite = ({ title, url, id, country, countrycode }: IPROPSLISTFAVORITE) => {
-  
-
-  const { currentStationId, isPlaying, playStation, stopStation, removeStation } = useStations();
+export const ListFavorite = ({
+  title,
+  url,
+  id,
+  country,
+  countrycode,
+}: IPROPSLISTFAVORITE) => {
+  const {
+    currentStationId,
+    isPlaying,
+    playStation,
+    stopStation,
+    removeStation,
+  } = useStations();
 
   const handlePlayPause = () => {
-
     if (currentStationId === id && isPlaying) {
       stopStation();
     } else {
       const json = {
-        stationuuid: id, 
-        name: title, 
-        url, 
-        country, 
-        countrycode 
-      }
-      playStation({ ...json });  
+        stationuuid: id,
+        name: title,
+        url,
+        country,
+        countrycode,
+      };
+      playStation({ ...json });
     }
   };
 
@@ -46,11 +55,13 @@ export const ListFavorite = ({ title, url, id, country, countrycode }: IPROPSLIS
           >
             {currentStationId === id && isPlaying ? <Pause /> : <Play />}
           </button>
-          <div className="flex flex-col ">
-            <h3 className='overflow-hidden truncate font-semibold text-[24px]'>{title}</h3>
-            <div className='flex flex-row flex-wrap gap-1'>
-              <p className='font-normal text-[16px]'>{country},</p>
-              <p className='font-normal text-[16px]'>{countrycode}</p>
+          <div className="flex flex-col max-w-[175px] md:max-w-full">
+            <h3 className="overflow-hidden truncate font-semibold text-[24px]">
+              {title}
+            </h3>
+            <div className="flex flex-row flex-wrap gap-1">
+              <p className="font-normal text-[16px]">{country},</p>
+              <p className="font-normal text-[16px]">{countrycode}</p>
             </div>
           </div>
         </div>

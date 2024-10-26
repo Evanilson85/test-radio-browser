@@ -1,4 +1,4 @@
-import { X, Square } from 'lucide-react';
+import { Square, ArrowLeft } from 'lucide-react';
 import { Header } from '../header';
 import { ListFavorite } from '../list/listFavorite';
 import { Blur } from '../blur';
@@ -25,8 +25,12 @@ export const Screen = ({ ...props }: IPROPSMENU) => {
       <div>
         <Header.root>
           <div className="flex justify-between md:hidden">
-            <button onClick={props.onClose}>
-              <X color="#f87171 " />
+            <button
+              className="text-white flex items-center gap-2"
+              onClick={props.onClose}
+            >
+              <ArrowLeft color="#fff" />
+              Voltar
             </button>
             <button>
               <Header.icon iconName="Search" size={34} />

@@ -58,11 +58,10 @@ export const Home = () => {
       );
       return localStorageMatch
         ? { ...station, ...localStorageMatch }
-        : { ...station, checkFavorite: false }; 
+        : { ...station, checkFavorite: false };
     });
     setStations(updatedStations);
-  }, [getStationsFromLocalStorage])
-
+  }, [getStationsFromLocalStorage]);
 
   const filteredItems = stations.filter(
     item =>
@@ -86,10 +85,10 @@ export const Home = () => {
 
   const handleSaveStation = (station: IStations) => {
     if (station.checkFavorite)
-      return  toast({
+      return toast({
         title: '',
-        description: "This station is already in your favorites!",
-      })
+        description: 'This station is already in your favorites!',
+      });
 
     const newStation = { ...station, checkFavorite: true };
     saveStation(newStation);
@@ -100,8 +99,8 @@ export const Home = () => {
     // adding to favorites
     toast({
       title: '',
-      description: "adding to favorites",
-    })
+      description: 'adding to favorites',
+    });
     setStations(updatedStations);
   };
 

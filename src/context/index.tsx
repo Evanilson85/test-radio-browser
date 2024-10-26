@@ -7,8 +7,16 @@ interface StationsContextType {
   stations: IStations[];
   currentStationId: string | null;
   isPlaying: boolean;
-  currentStationData : Pick<IStations, 'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'> | null 
-  playStation: (station: Pick<IStations, 'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'>) => void;
+  currentStationData: Pick<
+    IStations,
+    'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'
+  > | null;
+  playStation: (
+    station: Pick<
+      IStations,
+      'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'
+    >
+  ) => void;
   stopStation: () => void;
   saveStation: (station: IStations) => void;
   editStation: (stationuuid: string, updatedName: string) => void;
@@ -25,23 +33,29 @@ export const StationsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   const [stations, setStations] = useState<IStations[]>([]);
   const [currentStationId, setCurrentStationId] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
-  const [currentStationData, setCurrentStationData] = useState<Pick<IStations, 'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'> | null>(null)
+  const [currentStationData, setCurrentStationData] = useState<Pick<
+    IStations,
+    'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'
+  > | null>(null);
 
-  const playStation = (station: Pick<IStations, 'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'>) => {
-  
+  const playStation = (
+    station: Pick<
+      IStations,
+      'stationuuid' | 'name' | 'url' | 'country' | 'countrycode'
+    >
+  ) => {
     if (audio) {
       audio.pause();
     }
 
     const newAudio = new Audio(station.url);
-    setCurrentStationData(station)
+    setCurrentStationData(station);
     newAudio.play();
     setAudio(newAudio);
     setCurrentStationId(station.stationuuid);
@@ -74,30 +88,27 @@ export const StationsProvider = ({
     localStorage.setItem('favoriteStations', JSON.stringify(updatedStations));
     setStations(updatedStations);
   };
-  
-  const editStation = (stationuuid: string, updatedName: string) => {
 
+  const editStation = (stationuuid: string, updatedName: string) => {
     const storedStations = getStationsFromLocalStorage();
     const updatedStations = storedStations.map(station => {
       return station.stationuuid === stationuuid
-      ? { ...station, name: updatedName }
-      : station
-    }
-      
-    );
+        ? { ...station, name: updatedName }
+        : station;
+    });
 
     localStorage.setItem('favoriteStations', JSON.stringify(updatedStations));
     setStations(updatedStations);
   };
 
   const removeStation = (stationuuid: string) => {
-
     if (audio && currentStationData?.stationuuid === stationuuid) {
       toast({
         title: '',
-        description: "It is not possible to delete when listening to the current radio",
-      })
-     return
+        description:
+          'It is not possible to delete when listening to the current radio',
+      });
+      return;
     }
 
     const storedStations = getStationsFromLocalStorage();
@@ -109,9 +120,9 @@ export const StationsProvider = ({
     setStations(updatedStations);
 
     toast({
-      title: "",
-      description: "Successfully deleted!",
-    })
+      title: '',
+      description: 'Successfully deleted!',
+    });
   };
 
   const getStationsFromLocalStorage = (): IStations[] => {
