@@ -3,15 +3,24 @@ import { Header } from '../header';
 import { ListFavorite } from '../list/listFavorite';
 import { Blur } from '../blur';
 
-interface IPROPSMENU {
-  open: boolean;
-  onClose: () => void;
-}
+import { IPROPSMENU } from '@/interfaces';
+import { useStations } from '@/context';
+import { useState } from 'react';
 
 export const Screen = ({ ...props }: IPROPSMENU) => {
+  const { stations, currentStationData, stopStation } = useStations();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredStations = stations.filter(
+    station =>
+      station.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      station.countrycode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      station.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div
-      className={`h-dvh overflow-y-auto bg-main w-full p-6 fixed z-50 ease-linear duration-200 ${props.open ? 'right-0' : '-right-[100%]'} md:right-[0%] md:w-spacing-right md:absolute`}
+      className={`h-svh overflow-y-auto bg-main w-full p-6 fixed z-50 ease-linear duration-200 ${props.open ? 'right-0' : '-right-[100%]'} md:right-[0%] md:w-spacing-right md:absolute`}
     >
       <div>
         <Header.root>
@@ -35,6 +44,8 @@ export const Screen = ({ ...props }: IPROPSMENU) => {
               type="text"
               placeholder="Search stations"
               className="text-white bg-transparent border-none outline-none"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
             />
           </button>
         </div>
@@ -42,17 +53,36 @@ export const Screen = ({ ...props }: IPROPSMENU) => {
       <div className="bg-[#4D4D56] min-h-dvh rounded-[10px] relative mt-5">
         <Blur>
           <div className="border-b-[1px] border-b-[#605C5C]">
-            <div className="flex gap-5 items-center h-[75px] px-10 relative">
-              <div className="bg-black rounded-md">
-                <Square />
+            {stations.length > 0 && (
+              <div className="flex gap-5 items-center h-[75px] px-10 relative">
+                <button className="bg-black rounded-md" onClick={stopStation}>
+                  <Square />
+                </button>
+                <h2 className="text-[24px] font-semibold">
+                  {currentStationData?.name ?? 'select station'}
+                </h2>
               </div>
-              <h2 className="text-[24px] font-semibold">NOME DA RÁDIO ATUAL</h2>
-            </div>
+            )}
           </div>
-          <div className=" flex flex-col gap-5 md:p-5">
-            {Array.from({ length: 20 }).map((_, index) => (
-              <ListFavorite key={index} />
-            ))}
+          <div className="flex flex-col gap-5 md:p-5">
+            {filteredStations.length > 0 ? (
+              filteredStations.map(station => (
+                <ListFavorite
+                  key={station.stationuuid}
+                  title={station.name}
+                  url={station.url ? station.url : station.url_resolved}
+                  id={station.stationuuid}
+                  country={station.country}
+                  countrycode={station.countrycode}
+                />
+              ))
+            ) : (
+              <div className="h-[200px] max-h-full relative z-50 flex items-center justify-center">
+                <p className="text-white font-semibold text-[24px]">
+                  No favorite stations found
+                </p>
+              </div>
+            )}
           </div>
         </Blur>
       </div>

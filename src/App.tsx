@@ -1,10 +1,13 @@
+import { StationsProvider } from '@/context/index';
 import { Home } from './pages/Home';
 
 function App() {
   return (
-    <div className="bg-main min-h-dvh">
-      <Home />
-    </div>
+    <StationsProvider>
+      <div className="bg-main min-h-dvh">
+        <Home />
+      </div>
+    </StationsProvider>
   );
 }
 

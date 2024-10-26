@@ -5,18 +5,15 @@ import { Menu } from '@/components/screenFavorite';
 import ReactLoading from 'react-loading';
 
 import api from '@/service/api';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-interface IStations {
-  name: string;
-  stationuuid: string;
-  url_resolved: string;
-  url: string;
-  country: string;
-  language: string;
-}
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { IStations } from '@/interfaces';
+import { useStations } from '@/context';
+import { toast } from '@/hooks/use-toast';
 
 export const Home = () => {
+  const { saveStation, getStationsFromLocalStorage } = useStations();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [stations, setStations] = useState<IStations[]>([]);
@@ -30,16 +27,18 @@ export const Home = () => {
       try {
         const { data } = await api.get('/json/stations/search?limit=100');
 
-        const filteredData: IStations[] = data.map((station: IStations) => ({
-          country: station.country,
-          language: station.language,
-          name: station.name,
-          stationuuid: station.stationuuid,
-          url: station.url,
-          url_resolved: station.url_resolved,
-        }));
+        const storedStations = getStationsFromLocalStorage();
 
-        setStations(filteredData);
+        const updatedStations = data.map((station: IStations) => {
+          const localStorageMatch = storedStations.find(
+            s => s.stationuuid === station.stationuuid
+          );
+          return localStorageMatch
+            ? { ...station, ...localStorageMatch }
+            : station;
+        });
+
+        setStations(updatedStations);
       } catch (error) {
         setError('Failed to load stations. Please try again later.');
         console.error(error);
@@ -50,6 +49,20 @@ export const Home = () => {
 
     fetchRadios();
   }, []);
+
+  useEffect(() => {
+    const storedStations = getStationsFromLocalStorage();
+    const updatedStations = stations.map(station => {
+      const localStorageMatch = storedStations.find(
+        s => s.stationuuid === station.stationuuid
+      );
+      return localStorageMatch
+        ? { ...station, ...localStorageMatch }
+        : { ...station, checkFavorite: false }; 
+    });
+    setStations(updatedStations);
+  }, [getStationsFromLocalStorage])
+
 
   const filteredItems = stations.filter(
     item =>
@@ -69,6 +82,27 @@ export const Home = () => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
     }
+  };
+
+  const handleSaveStation = (station: IStations) => {
+    if (station.checkFavorite)
+      return  toast({
+        title: '',
+        description: "This station is already in your favorites!",
+      })
+
+    const newStation = { ...station, checkFavorite: true };
+    saveStation(newStation);
+
+    const updatedStations = stations.map(item =>
+      item.stationuuid === station.stationuuid ? newStation : item
+    );
+    // adding to favorites
+    toast({
+      title: '',
+      description: "adding to favorites",
+    })
+    setStations(updatedStations);
   };
 
   return (
@@ -108,17 +142,16 @@ export const Home = () => {
                 currentItems.map(item => (
                   <List.stations
                     key={item.stationuuid}
-                    checkFavorite={true}
+                    checkFavorite={item.checkFavorite}
                     title={item.name !== ' ' ? item.name : 'name not found'}
+                    onClick={() => handleSaveStation(item)}
                   />
                 ))
               ) : (
-                <p className="text-white font-semibold">
-                  No stations found.
-                </p>
+                <p className="text-white font-semibold">No stations found.</p>
               )}
 
-              {currentItems.length > 0 && (
+              {currentItems.length > 0 && ( // refatorar
                 <div className="flex justify-between mt-4">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
