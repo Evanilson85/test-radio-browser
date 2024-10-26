@@ -96,7 +96,7 @@ export const Home = () => {
     const updatedStations = stations.map(item =>
       item.stationuuid === station.stationuuid ? newStation : item
     );
-    // adding to favorites
+
     toast({
       title: '',
       description: 'adding to favorites',
@@ -150,7 +150,7 @@ export const Home = () => {
                 <p className="text-white font-semibold">No stations found.</p>
               )}
 
-              {currentItems.length > 0 && ( // refatorar
+              {currentItems.length > 0 && ( 
                 <div className="flex justify-between mt-4">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
