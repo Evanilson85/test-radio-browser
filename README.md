@@ -4,10 +4,11 @@ Uma aplicação de navegação e pesquisa de estações de rádio.
 Tecnologias Utilizadas
 Linguagem: JavaScript
 Framework: React
-Estilização: Tailwind CSS
+Estilização: Tailwind CSS, shadcn/ui
 Ferramenta de Build: Vite
+
 Como Instalar e Usar
-Clone o repositório:
+Clone o repositório: https://github.com/Evanilson85/test-radio-browser
 
 bash
 Copiar código
@@ -25,3 +26,6 @@ Para iniciar o servidor de desenvolvimento, execute:
 npm run dev
 
 url deploy https://radio-browser-chi.vercel.app/
+
+
+This is a challenge by Coodesh
